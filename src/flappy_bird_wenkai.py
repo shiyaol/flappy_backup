@@ -38,7 +38,7 @@ class Pipe(object):
 
 
 class FlappyBird():
-    #init()
+    init()
     def __init__(self):
 
 
@@ -130,9 +130,9 @@ class FlappyBird():
             pipe_center_x = pipe.x_upper + self.pipe_width / 2
             if pipe_center_x < bird_center_x and bird_center_x < pipe_center_x + 5:
                 self.score += 1
-                reward = 1
-                break
-    
+                return 1
+        return 0.1
+
     def update_bird_pos(self):
         # Update bird's position
         if not self.flapped and self.current_velocity_y < self.max_velocity_y:
@@ -180,7 +180,7 @@ class FlappyBird():
         pump()
         reward = 0.1
         terminal = False
-        self.update_score()
+        reward = self.update_score()
         # Check input action
         if action == 1:
             self.flapped = True

@@ -5,7 +5,7 @@ from src.deep_q_network import DeepQNetwork
 from src.flappy_bird_wenkai import FlappyBird
 from src.utils import pre_processing
 import os
-os.environ["SDL_VIDEODRIVER"] = "dummy"
+#os.environ["SDL_VIDEODRIVER"] = "dummy"
 
 file = open("test_score.txt", "w")
 
@@ -13,7 +13,7 @@ def get_args():
     parser = argparse.ArgumentParser(
         """Implementation of Deep Q Network to play Flappy Bird""")
     parser.add_argument("--image_size", type=int, default=84, help="The common width and height for all images")
-    parser.add_argument("--saved_path", type=str, default="trained_models")
+    parser.add_argument("--saved_path", type=str, default="trained_models-all")
 
     args = parser.parse_args()
     print(args)
@@ -26,7 +26,7 @@ def test_flap(opt):
     else:
         torch.manual_seed(123)
 
-    model = torch.load("{}/flappy_bird_2000000_gpu".format(opt.saved_path), map_location=lambda storage, loc: storage)
+    model = torch.load("{}/flappy_bird_final_backup".format(opt.saved_path), map_location=lambda storage, loc: storage)
     model.eval()
     game_state = FlappyBird()
     image, reward, terminal = game_state.next_frame(0)
@@ -44,6 +44,8 @@ def test_flap(opt):
         action = torch.argmax(prediction)
 
         next_image, reward, terminal = game_state.next_frame(action)
+        #print(reward)
+        if (reward == 1): print(game_state.score)
         next_image = pre_processing(next_image[:game_state.screen_width, :int(game_state.base_y)], opt.image_size,
                                     opt.image_size)
         next_image = torch.from_numpy(next_image)
